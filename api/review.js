@@ -26,27 +26,26 @@ export default async function handler(req, res) {
     : "- Mention the cozy Victorian aesthetic, coffee, food, or warm hospitality naturally";
 
   const lengthPresets = [
-    { rule: "Length: exactly 1 to 2 short, punchy sentences.", tokens: 90 },
-    { rule: "Length: exactly 2 natural sentences, crisp and pleasant.", tokens: 110 },
-    { rule: "Length: 2 to 3 sentences, relaxed and conversational.", tokens: 140 },
-    { rule: "Length: 3 to 4 expressive sentences with a bit more detail on the taste and setting.", tokens: 190 },
+    { rule: "Length: strictly 1 short, punchy sentence (under 140 characters).", tokens: 45 },
+    { rule: "Length: exactly 1 to 2 short, sweet sentences (between 100 and 190 characters total).", tokens: 60 },
+    { rule: "Length: exactly 2 concise sentences (between 140 and 250 characters total).", tokens: 75 },
   ];
   const selectedLength = lengthPresets[Math.floor(Math.random() * lengthPresets.length)];
 
-  const prompt = `Generate a genuine-sounding 5-star Google review for ${RESTAURANT_NAME}, a ${RESTAURANT_TYPE} known for ${RESTAURANT_SPECIALTY}.
-Rules:
+  const prompt = `Generate a very short, genuine 5-star Google review for ${RESTAURANT_NAME}, a ${RESTAURANT_TYPE}.
+STRICT CONSTRAINTS:
+- Length: strictly between 100 and 260 characters total (1 to 2 short sentences max). NEVER write long reviews or exceed 300 characters.
 - ${selectedLength.rule}
-- Sound like a real happy visitor writing casually after a lovely meal
-- Keep the tone warm, relaxed, and appreciative
+- Sound like a real customer writing quickly from their phone
+- Keep it warm, casual, and authentic
 ${keywordLine}
-- Vary the writing style each time (cozy, aesthetic-loving, foodie, casual brunch vibe)
-- No markdown formatting, no bold asterisks (**), no quotation marks, no emojis, no hashtags
-- No cliché phrases like "I highly recommend" or "must-visit spot"
-- Do NOT start every review with "I" or "We", vary the opening sentence naturally
+- No long rambling paragraphs, no filler text, no emojis, no hashtags, no quotes
+- No markdown formatting or asterisks
+- Do NOT start every review with "I" or "We", vary the opening
 - Just return the plain review text, nothing else`;
 
   try {
-    const randomTemp = Number((1.05 + Math.random() * 0.25).toFixed(2));
+    const randomTemp = Number((1.0 + Math.random() * 0.2).toFixed(2));
     const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -71,7 +70,15 @@ ${keywordLine}
     }
 
     const data = await response.json();
-    const review = data.choices[0].message.content.trim();
+    let review = data.choices[0].message.content.trim().replace(/^["']|["']$/g, "");
+    if (review.length > 300) {
+      const sentenceEnd = review.lastIndexOf(".", 299);
+      if (sentenceEnd > 80) {
+        review = review.slice(0, sentenceEnd + 1);
+      } else {
+        review = review.slice(0, 280) + "...";
+      }
+    }
     return res.status(200).json({ review });
   } catch (error) {
     return res.status(500).json({
