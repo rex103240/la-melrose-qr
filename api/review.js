@@ -8,7 +8,7 @@ export default async function handler(req, res) {
   if (!GROQ_API_KEY) {
     return res.status(500).json({
       error: "GROQ_API_KEY is missing",
-      hint: "Add it in Vercel → Settings → Environment Variables, then Redeploy",
+      hint: "Add GROQ_API_KEY in Vercel → Settings → Environment Variables, then Redeploy",
     });
   }
 

@@ -388,52 +388,30 @@
     <!-- Keyword Section 1: Visit Type -->
     <div class="kw-section">
       <div class="kw-label">
-        What brought you in today?
+        What brought you in?
         <span>(optional)</span>
       </div>
       <div class="chips" id="chips-visit">
-        <span class="chip" data-group="visit">Coffee & Tea</span>
-        <span class="chip" data-group="visit">Brunch & Lunch</span>
-        <span class="chip" data-group="visit">Cozy Dinner</span>
-        <span class="chip" data-group="visit">Catchup with Friends</span>
-        <span class="chip" data-group="visit">Birthday Celebration</span>
-        <span class="chip" data-group="visit">Aesthetic Photoshoot</span>
-        <span class="chip" data-group="visit">Dessert Date</span>
+        <span class="chip">Coffee & Desserts</span>
+        <span class="chip">Brunch & Lunch</span>
+        <span class="chip">Cozy Dinner</span>
+        <span class="chip">Celebration & Catchup</span>
       </div>
     </div>
 
-    <!-- Keyword Section 2: Favorite Orders -->
+    <!-- Keyword Section 2: Favorites -->
     <div class="kw-section">
       <div class="kw-label">
-        What dishes or drinks did you enjoy?
+        What did you love?
         <span>(optional)</span>
       </div>
       <div class="chips" id="chips-food">
-        <span class="chip" data-group="food">Thin Crust Pizza</span>
-        <span class="chip" data-group="food">Pistachio Berries Matcha</span>
-        <span class="chip" data-group="food">Sriracha Lotus Stem</span>
-        <span class="chip" data-group="food">Sizzling Brownie</span>
-        <span class="chip" data-group="food">Artisan Coffee / Latte</span>
-        <span class="chip" data-group="food">Alfredo & Pastas</span>
-        <span class="chip" data-group="food">Handcrafted Sushi</span>
-        <span class="chip" data-group="food">La Melrose Belleza</span>
-        <span class="chip" data-group="food">Apple Cinnamon Tea</span>
-      </div>
-    </div>
-
-    <!-- Keyword Section 3: The Ambience & Service -->
-    <div class="kw-section">
-      <div class="kw-label">
-        Highlights of the experience
-        <span>(optional)</span>
-      </div>
-      <div class="chips" id="chips-vibe">
-        <span class="chip" data-group="vibe">Victorian Aesthetic & Decor</span>
-        <span class="chip" data-group="vibe">Relaxing & Soothing Vibe</span>
-        <span class="chip" data-group="vibe">Polite & Gentle Staff</span>
-        <span class="chip" data-group="vibe">Outdoor Garden Seating</span>
-        <span class="chip" data-group="vibe">Beautiful Food Presentation</span>
-        <span class="chip" data-group="vibe">Circuit House Charm</span>
+        <span class="chip">Thin Crust Pizza</span>
+        <span class="chip">Pistachio Matcha</span>
+        <span class="chip">Sriracha Lotus Stem</span>
+        <span class="chip">Sizzling Brownie</span>
+        <span class="chip">Victorian Ambience</span>
+        <span class="chip">Warm & Gentle Staff</span>
       </div>
     </div>
 
@@ -512,8 +490,10 @@
       try {
         const query = keywords.length ? `?keywords=${encodeURIComponent(keywords.join(","))}` : "";
         const res = await fetch(`/api/review${query}`);
-        const data = await res.json();
-        if (data.error) throw new Error(data.error);
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok || data.error) {
+          throw new Error(data.hint || data.error || data.details || `Server error (${res.status})`);
+        }
 
         currentReview = data.review;
         document.getElementById("review-text").textContent = currentReview;
@@ -533,7 +513,7 @@
       } catch (err) {
         document.getElementById("loader").classList.remove("show");
         document.getElementById("generate-btn").style.display = "flex";
-        document.getElementById("error-msg").textContent = "Could not generate review. Please try again.";
+        document.getElementById("error-msg").textContent = err.message || "Could not generate review. Please try again.";
         document.getElementById("error-msg").classList.add("show");
       }
     }
