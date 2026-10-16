@@ -25,9 +25,17 @@ export default async function handler(req, res) {
     ? `- Naturally highlight these specific things the customer loved: ${keywords.join(", ")}`
     : "- Mention the cozy Victorian aesthetic, coffee, food, or warm hospitality naturally";
 
-  const prompt = `Generate a short, genuine-sounding 5-star Google review for ${RESTAURANT_NAME}, a ${RESTAURANT_TYPE} known for ${RESTAURANT_SPECIALTY}.
+  const lengthPresets = [
+    { rule: "Length: exactly 1 to 2 short, punchy sentences.", tokens: 90 },
+    { rule: "Length: exactly 2 natural sentences, crisp and pleasant.", tokens: 110 },
+    { rule: "Length: 2 to 3 sentences, relaxed and conversational.", tokens: 140 },
+    { rule: "Length: 3 to 4 expressive sentences with a bit more detail on the taste and setting.", tokens: 190 },
+  ];
+  const selectedLength = lengthPresets[Math.floor(Math.random() * lengthPresets.length)];
+
+  const prompt = `Generate a genuine-sounding 5-star Google review for ${RESTAURANT_NAME}, a ${RESTAURANT_TYPE} known for ${RESTAURANT_SPECIALTY}.
 Rules:
-- 2-4 sentences max
+- ${selectedLength.rule}
 - Sound like a real happy visitor writing casually after a lovely meal
 - Keep the tone warm, relaxed, and appreciative
 ${keywordLine}
@@ -38,6 +46,7 @@ ${keywordLine}
 - Just return the plain review text, nothing else`;
 
   try {
+    const randomTemp = Number((1.05 + Math.random() * 0.25).toFixed(2));
     const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -47,8 +56,8 @@ ${keywordLine}
       body: JSON.stringify({
         model: "qwen/qwen3.8-27b",
         messages: [{ role: "user", content: prompt }],
-        temperature: 1.15,
-        max_tokens: 150,
+        temperature: randomTemp,
+        max_tokens: selectedLength.tokens,
       }),
     });
 

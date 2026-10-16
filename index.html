@@ -461,12 +461,65 @@
     const GOOGLE_MAPS_SHORTLINK = "https://maps.app.goo.gl/JDRxbDaR2G3fsU2x5";
     const CID_URL = "https://maps.google.com/?cid=1430779436164975714";
 
+    // Master pools for automatic rotation per user/visit
+    const VISIT_POOL = [
+      "Coffee & Desserts",
+      "Brunch & Lunch",
+      "Cozy Dinner",
+      "Celebration & Catchup",
+      "Aesthetic Photoshoot",
+      "Date Night",
+      "Solo Chill & Read",
+      "Evening Tea & Snacks"
+    ];
+
+    const FAVORITES_POOL = [
+      "Thin Crust Pizza",
+      "Pistachio Matcha",
+      "Sriracha Lotus Stem",
+      "Sizzling Brownie",
+      "Victorian Ambience",
+      "Warm & Gentle Staff",
+      "Handcrafted Sushi",
+      "Alfredo Pasta",
+      "La Melrose Belleza",
+      "Apple Cinnamon Tea",
+      "Artisan Coffee / Latte",
+      "Outdoor Garden Seating",
+      "Circuit House Charm"
+    ];
+
     let currentReview = "";
 
-    // Toggle chip selections
-    document.querySelectorAll(".chip").forEach(chip => {
-      chip.addEventListener("click", () => chip.classList.toggle("active"));
-    });
+    function shuffle(arr) {
+      const a = [...arr];
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    // Automatically rotate/shuffle chips by default for every user
+    function initRotatedChips() {
+      const visitContainer = document.getElementById("chips-visit");
+      const foodContainer = document.getElementById("chips-food");
+
+      const pickedVisits = shuffle(VISIT_POOL).slice(0, 4);
+      const pickedFood = shuffle(FAVORITES_POOL).slice(0, 6);
+
+      visitContainer.innerHTML = pickedVisits
+        .map(item => `<span class="chip">${item}</span>`)
+        .join("");
+
+      foodContainer.innerHTML = pickedFood
+        .map(item => `<span class="chip">${item}</span>`)
+        .join("");
+
+      document.querySelectorAll(".chip").forEach(chip => {
+        chip.addEventListener("click", () => chip.classList.toggle("active"));
+      });
+    }
 
     function getSelectedKeywords() {
       return Array.from(document.querySelectorAll(".chip.active"))
@@ -530,6 +583,9 @@
       // Universal Google Maps shortlink (routes straight to native Google Maps app on mobile)
       window.location.href = GOOGLE_MAPS_SHORTLINK;
     }
+
+    // Run rotation immediately on load
+    initRotatedChips();
   </script>
 </body>
 </html>
