@@ -1,0 +1,9 @@
+{
+  "name": "la-melrose-qr",
+  "version": "1.0.0",
+  "description": "AI-Powered Google Review Generator for La Melrose Jodhpur",
+  "type": "module",
+  "scripts": {
+    "start": "node api/review.js"
+  }
+}

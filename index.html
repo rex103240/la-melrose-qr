@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>La Melrose — Leave a Review</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg-cream: #F8F5EE;
+      --card-bg: #FFFFFF;
+      --border-parchment: #EBE4D8;
+      --border-accent: #D8CDBC;
+      --text-espresso: #2A211B;
+      --text-muted: #726559;
+      --text-faint: #A4988A;
+      --victorian-gold: #B88A44;
+      --victorian-gold-dark: #9A6F2C;
+      --retro-sage: #3D5A4C;
+      --retro-sage-hover: #2F473B;
+      --retro-sage-light: #EEF3F0;
+      --chip-bg: #FAF7F2;
+      --chip-border: #E5DCCE;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: var(--bg-cream);
+      background-image: radial-gradient(#E8DFCFA0 1px, transparent 1px);
+      background-size: 24px 24px;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 28px 20px;
+      color: var(--text-espresso);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 42px 34px;
+      max-width: 470px;
+      width: 100%;
+      border: 1px solid var(--border-parchment);
+      box-shadow: 0 10px 36px rgba(61, 46, 35, 0.06), 0 2px 6px rgba(61, 46, 35, 0.03);
+      position: relative;
+    }
+
+    /* Victorian decorative subtle inner border */
+    .card::before {
+      content: "";
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      right: 10px;
+      bottom: 10px;
+      border: 1px solid rgba(184, 138, 68, 0.18);
+      border-radius: 14px;
+      pointer-events: none;
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      margin-bottom: 22px;
+      position: relative;
+    }
+
+    .crest {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: #FAF6F0;
+      border: 1px solid var(--victorian-gold);
+      color: var(--victorian-gold);
+      margin-bottom: 12px;
+      box-shadow: 0 2px 8px rgba(184, 138, 68, 0.12);
+    }
+
+    .crest svg {
+      width: 26px;
+      height: 26px;
+      fill: currentColor;
+    }
+
+    .brand-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--text-espresso);
+      letter-spacing: -0.3px;
+      line-height: 1.15;
+    }
+
+    .brand-tagline {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 6px;
+      font-weight: 400;
+      line-height: 1.5;
+    }
+
+    .time-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      margin-top: 10px;
+      padding: 4px 12px;
+      background: var(--retro-sage-light);
+      border: 1px solid #D5E2DA;
+      border-radius: 20px;
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--retro-sage);
+      letter-spacing: 0.2px;
+    }
+
+    .time-badge::before {
+      content: "•";
+      color: var(--retro-sage);
+      font-size: 14px;
+    }
+
+    /* Stars */
+    .stars {
+      text-align: center;
+      font-size: 24px;
+      letter-spacing: 4px;
+      margin: 18px 0 22px;
+      color: #D9A441;
+    }
+
+    /* Keyword Sections */
+    .kw-section {
+      margin-bottom: 18px;
+    }
+
+    .kw-label {
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--victorian-gold-dark);
+      text-transform: uppercase;
+      letter-spacing: 0.9px;
+      margin-bottom: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .kw-label span {
+      font-size: 11px;
+      color: var(--text-faint);
+      text-transform: none;
+      font-weight: 400;
+      letter-spacing: normal;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+
+    .chip {
+      padding: 6.5px 13px;
+      border-radius: 8px;
+      font-size: 12.5px;
+      font-weight: 500;
+      cursor: pointer;
+      border: 1px solid var(--chip-border);
+      background: var(--chip-bg);
+      color: var(--text-espresso);
+      transition: all 0.18s ease;
+      user-select: none;
+    }
+
+    .chip:hover {
+      border-color: var(--victorian-gold);
+      background: #FFFDF9;
+      color: var(--victorian-gold-dark);
+    }
+
+    .chip.active {
+      border-color: var(--retro-sage);
+      background: var(--retro-sage);
+      color: #FFFFFF;
+      box-shadow: 0 2px 6px rgba(61, 90, 76, 0.25);
+    }
+
+    hr.ornament {
+      border: 0;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--border-accent), transparent);
+      margin: 22px 0 20px;
+    }
+
+    /* Loading Spinner */
+    .loader {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      color: var(--text-muted);
+      font-size: 13.5px;
+      padding: 18px 0;
+    }
+
+    .loader.show { display: flex; }
+
+    .spinner {
+      width: 17px;
+      height: 17px;
+      border: 2px solid var(--chip-border);
+      border-top-color: var(--victorian-gold);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      flex-shrink: 0;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Review Header & Fade Badge */
+    .review-header {
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .review-header.show { display: flex; }
+
+    .review-label {
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--victorian-gold-dark);
+      text-transform: uppercase;
+      letter-spacing: 0.9px;
+    }
+
+    .copied-badge {
+      opacity: 0;
+      transform: translateY(-2px);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      background: #E8F5EC;
+      color: #216E39;
+      border: 1px solid #C3E6CB;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2.5px 9px;
+      border-radius: 12px;
+      display: inline-flex;
+      align-items: center;
+      pointer-events: none;
+    }
+
+    .copied-badge.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Review Text Box */
+    .review-box {
+      display: none;
+      background: #FAF7F2;
+      border: 1px solid #EADBCE;
+      border-radius: 12px;
+      padding: 16px 18px;
+      font-size: 13.5px;
+      color: var(--text-espresso);
+      line-height: 1.7;
+      margin-bottom: 14px;
+      font-style: normal;
+    }
+
+    .review-box.show { display: block; }
+
+    /* Hint box */
+    .step-hint {
+      display: none;
+      font-size: 12.5px;
+      color: var(--retro-sage);
+      font-weight: 500;
+      margin-bottom: 14px;
+      padding: 10px 14px;
+      background: var(--retro-sage-light);
+      border-radius: 10px;
+      border: 1px solid #D1DFD6;
+      line-height: 1.5;
+      text-align: center;
+    }
+
+    .step-hint.show { display: block; }
+
+    /* Buttons */
+    .btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 13px 18px;
+      border-radius: 10px;
+      border: none;
+      font-size: 14px;
+      font-weight: 600;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.18s ease;
+      margin-bottom: 10px;
+    }
+
+    .btn:active { transform: scale(0.985); }
+
+    .btn-generate {
+      background: var(--retro-sage);
+      color: #FFFFFF;
+      box-shadow: 0 3px 10px rgba(61, 90, 76, 0.2);
+    }
+
+    .btn-generate:hover { background: var(--retro-sage-hover); }
+
+    .btn-google {
+      background: var(--retro-sage);
+      color: #FFFFFF;
+      display: none;
+      box-shadow: 0 3px 10px rgba(61, 90, 76, 0.2);
+    }
+
+    .btn-google:hover { background: var(--retro-sage-hover); }
+    .btn-google.show { display: flex; }
+
+    .btn-outline {
+      background: #FFFFFF;
+      color: var(--text-muted);
+      border: 1px solid var(--border-accent);
+      font-size: 13px;
+      margin-bottom: 0;
+    }
+
+    .btn-outline:hover {
+      background: #FAF7F2;
+      color: var(--text-espresso);
+    }
+
+    .error {
+      display: none;
+      font-size: 12.5px;
+      color: #B91C1C;
+      margin-top: 8px;
+      text-align: center;
+    }
+
+    .error.show { display: block; }
+  </style>
+</head>
+<body>
+  <div class="card">
+
+    <!-- Header -->
+    <div class="header">
+      <div class="crest">
+        <!-- Victorian tea cup / cloche icon -->
+        <svg viewBox="0 0 24 24">
+          <path d="M20 3H4v10c0 2.21 1.79 4 4 4h6c2.21 0 4-1.79 4-4v-3h2c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 5h-2V5h2v3zM4 19h16v2H4z"/>
+        </svg>
+      </div>
+      <h1 class="brand-title">La Melrose</h1>
+      <p class="brand-tagline">Victorian-inspired café & comfort brasserie • Timeless charm</p>
+      <div class="time-badge">Open 11:30 AM – 11:30 PM</div>
+    </div>
+
+    <div class="stars">★★★★★</div>
+
+    <!-- Keyword Section 1: Visit Type -->
+    <div class="kw-section">
+      <div class="kw-label">
+        What brought you in today?
+        <span>(optional)</span>
+      </div>
+      <div class="chips" id="chips-visit">
+        <span class="chip" data-group="visit">Coffee & Tea</span>
+        <span class="chip" data-group="visit">Brunch & Lunch</span>
+        <span class="chip" data-group="visit">Cozy Dinner</span>
+        <span class="chip" data-group="visit">Catchup with Friends</span>
+        <span class="chip" data-group="visit">Birthday Celebration</span>
+        <span class="chip" data-group="visit">Aesthetic Photoshoot</span>
+        <span class="chip" data-group="visit">Dessert Date</span>
+      </div>
+    </div>
+
+    <!-- Keyword Section 2: Favorite Orders -->
+    <div class="kw-section">
+      <div class="kw-label">
+        What dishes or drinks did you enjoy?
+        <span>(optional)</span>
+      </div>
+      <div class="chips" id="chips-food">
+        <span class="chip" data-group="food">Thin Crust Pizza</span>
+        <span class="chip" data-group="food">Pistachio Berries Matcha</span>
+        <span class="chip" data-group="food">Sriracha Lotus Stem</span>
+        <span class="chip" data-group="food">Sizzling Brownie</span>
+        <span class="chip" data-group="food">Artisan Coffee / Latte</span>
+        <span class="chip" data-group="food">Alfredo & Pastas</span>
+        <span class="chip" data-group="food">Handcrafted Sushi</span>
+        <span class="chip" data-group="food">La Melrose Belleza</span>
+        <span class="chip" data-group="food">Apple Cinnamon Tea</span>
+      </div>
+    </div>
+
+    <!-- Keyword Section 3: The Ambience & Service -->
+    <div class="kw-section">
+      <div class="kw-label">
+        Highlights of the experience
+        <span>(optional)</span>
+      </div>
+      <div class="chips" id="chips-vibe">
+        <span class="chip" data-group="vibe">Victorian Aesthetic & Decor</span>
+        <span class="chip" data-group="vibe">Relaxing & Soothing Vibe</span>
+        <span class="chip" data-group="vibe">Polite & Gentle Staff</span>
+        <span class="chip" data-group="vibe">Outdoor Garden Seating</span>
+        <span class="chip" data-group="vibe">Beautiful Food Presentation</span>
+        <span class="chip" data-group="vibe">Circuit House Charm</span>
+      </div>
+    </div>
+
+    <hr class="ornament" />
+
+    <!-- Generate Action -->
+    <button class="btn btn-generate" id="generate-btn" onclick="generateReview()">
+      Generate Review
+    </button>
+
+    <!-- Review Section Header -->
+    <div class="review-header" id="review-header">
+      <span class="review-label">Suggested Review</span>
+      <span class="copied-badge" id="copied-badge">✓ Copied</span>
+    </div>
+
+    <!-- Loader -->
+    <div class="loader" id="loader">
+      <div class="spinner"></div>
+      Writing a thoughtful review...
+    </div>
+
+    <!-- Review Box -->
+    <div class="review-box" id="review-box">
+      <p id="review-text"></p>
+    </div>
+
+    <!-- Mobile Hint -->
+    <div class="step-hint" id="step-hint">
+      ✓ Review copied — open Google Maps, tap Paste and Post.
+    </div>
+
+    <!-- Action Buttons -->
+    <a class="btn btn-google" id="google-btn" href="#" onclick="openReview(event)">
+      Open Google Maps to Post →
+    </a>
+
+    <button class="btn btn-outline" id="regen-btn" style="display:none" onclick="generateReview()">
+      ↺ &nbsp;Generate Another Review
+    </button>
+
+    <p class="error" id="error-msg"></p>
+  </div>
+
+  <script>
+    // La Melrose Jodhpur Google Maps Deep Link
+    const GOOGLE_MAPS_SHORTLINK = "https://maps.app.goo.gl/JDRxbDaR2G3fsU2x5";
+    const CID_URL = "https://maps.google.com/?cid=1430779436164975714";
+
+    let currentReview = "";
+
+    // Toggle chip selections
+    document.querySelectorAll(".chip").forEach(chip => {
+      chip.addEventListener("click", () => chip.classList.toggle("active"));
+    });
+
+    function getSelectedKeywords() {
+      return Array.from(document.querySelectorAll(".chip.active"))
+        .map(c => c.textContent.trim());
+    }
+
+    async function generateReview() {
+      const keywords = getSelectedKeywords();
+
+      // UI state reset
+      document.getElementById("loader").classList.add("show");
+      document.getElementById("review-header").classList.remove("show");
+      document.getElementById("review-box").classList.remove("show");
+      document.getElementById("step-hint").classList.remove("show");
+      document.getElementById("google-btn").classList.remove("show");
+      document.getElementById("regen-btn").style.display = "none";
+      document.getElementById("copied-badge").classList.remove("show");
+      document.getElementById("error-msg").classList.remove("show");
+      document.getElementById("generate-btn").style.display = "none";
+
+      try {
+        const query = keywords.length ? `?keywords=${encodeURIComponent(keywords.join(","))}` : "";
+        const res = await fetch(`/api/review${query}`);
+        const data = await res.json();
+        if (data.error) throw new Error(data.error);
+
+        currentReview = data.review;
+        document.getElementById("review-text").textContent = currentReview;
+        document.getElementById("loader").classList.remove("show");
+        document.getElementById("review-header").classList.add("show");
+        document.getElementById("review-box").classList.add("show");
+        document.getElementById("google-btn").classList.add("show");
+        document.getElementById("regen-btn").style.display = "flex";
+
+        // Auto copy to clipboard
+        try {
+          await navigator.clipboard.writeText(currentReview);
+          document.getElementById("copied-badge").classList.add("show");
+          document.getElementById("step-hint").classList.add("show");
+        } catch (_) {}
+
+      } catch (err) {
+        document.getElementById("loader").classList.remove("show");
+        document.getElementById("generate-btn").style.display = "flex";
+        document.getElementById("error-msg").textContent = "Could not generate review. Please try again.";
+        document.getElementById("error-msg").classList.add("show");
+      }
+    }
+
+    async function openReview(e) {
+      if (e) e.preventDefault();
+
+      if (currentReview) {
+        try {
+          await navigator.clipboard.writeText(currentReview);
+        } catch (_) {}
+      }
+
+      // Universal Google Maps shortlink (routes straight to native Google Maps app on mobile)
+      window.location.href = GOOGLE_MAPS_SHORTLINK;
+    }
+  </script>
+</body>
+</html>
